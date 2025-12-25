@@ -24,7 +24,7 @@ export default function Home() {
       facingMode: { ideal: "environment" },
       width: { ideal: 1280 },
       height: { ideal: 360 },
-      aspectRatio: { ideal: 4 / 3 },
+      aspectRatio: { ideal: 2 / 1 },
     },
   };
 
