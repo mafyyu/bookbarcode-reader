@@ -10,6 +10,7 @@ import {
   DecodeHintType,
   NotFoundException,
 } from "@zxing/library";
+import styles from "./page.module.css";
 
 export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -22,7 +23,7 @@ export default function Home() {
     video: {
       facingMode: { ideal: "environment" },
       width: { ideal: 1280 },
-      height: { ideal: 720 },
+      height: { ideal: 360 },
       aspectRatio: { ideal: 4 / 3 },
     },
   };
@@ -42,8 +43,12 @@ export default function Home() {
       videoRef.current,
       (result, error, controls) => {
         if (result) {
-          console.log("isbn", result.getText());
-          setIsbn(result.getText());
+          const text = result.getText();
+          console.log(text);
+          if (text.startsWith("978")) {
+            setIsbn(text);
+            console.log("isbn", text);
+          } else return;
           // controls.stop();
         }
         if (error && !(error instanceof NotFoundException)) {
@@ -55,7 +60,11 @@ export default function Home() {
 
   return (
     <div>
-      <video ref={videoRef} style={{ width: "100%", maxWidth: 360 }} />
+      <div className={styles.scanner}>
+        <video ref={videoRef} className={styles.video} playsInline muted />
+        <div className={styles.scanLine}></div>
+      </div>
+
       <p>{isbn}</p>
     </div>
   );
