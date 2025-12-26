@@ -2,7 +2,6 @@
 
 import {
   BrowserMultiFormatOneDReader,
-  BrowserCodeReader,
 } from "@zxing/browser";
 import { useEffect, useRef, useState } from "react";
 import {
