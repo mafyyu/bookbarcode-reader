@@ -1,66 +1,69 @@
-import Image from "next/image";
+"use client";
+
+import {
+  BrowserMultiFormatOneDReader,
+} from "@zxing/browser";
+import { useEffect, useRef, useState } from "react";
+import {
+  BarcodeFormat,
+  DecodeHintType,
+  NotFoundException,
+} from "@zxing/library";
 import styles from "./page.module.css";
 
 export default function Home() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const readerRef = useRef<BrowserMultiFormatOneDReader | null>(null);
+
+  const [isbn, setIsbn] = useState<string | null>(null);
+
+  const constraints: MediaStreamConstraints = {
+    audio: false,
+    video: {
+      facingMode: { ideal: "environment" },
+      width: { ideal: 1280 },
+      height: { ideal: 360 },
+      aspectRatio: { ideal: 2 / 1 },
+    },
+  };
+
+  useEffect(() => {
+    if (!videoRef.current) return;
+
+    // 特定のバーコードのみ読み取り
+    const hints = new Map();
+    hints.set(DecodeHintType.POSSIBLE_FORMATS, [BarcodeFormat.EAN_13]);
+
+    const codeReader = new BrowserMultiFormatOneDReader(hints);
+    readerRef.current = codeReader;
+
+    codeReader.decodeFromConstraints(
+      constraints,
+      videoRef.current,
+      (result, error, controls) => {
+        if (result) {
+          const text = result.getText();
+          if (text.startsWith("978")) {
+            setIsbn(text);
+            console.log("isbn", text);
+          } else return;
+          // controls.stop();
+        }
+        if (error && !(error instanceof NotFoundException)) {
+          console.log("error", error);
+        }
+      },
+    );
+  }, []);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div>
+      <div className={styles.scanner}>
+        <video ref={videoRef} className={styles.video} playsInline muted autoPlay />
+        <div className={styles.scanLine}></div>
+      </div>
+
+      <p>{isbn}</p>
     </div>
   );
 }
