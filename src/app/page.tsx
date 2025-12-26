@@ -59,7 +59,7 @@ export default function Home() {
   return (
     <div>
       <div className={styles.scanner}>
-        <video ref={videoRef} className={styles.video} playsInline muted />
+        <video ref={videoRef} className={styles.video} playsInline muted autoPlay />
         <div className={styles.scanLine}></div>
       </div>
 
