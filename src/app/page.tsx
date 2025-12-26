@@ -44,7 +44,6 @@ export default function Home() {
       (result, error, controls) => {
         if (result) {
           const text = result.getText();
-          console.log(text);
           if (text.startsWith("978")) {
             setIsbn(text);
             console.log("isbn", text);
