@@ -50,6 +50,12 @@ export async function GET(request: NextRequest) {
   const res = await fetch(
     `${process.env.RAKUTEN_API_BASE_URL}&isbn=${isbnNumber}`,
   );
+  if (!res.ok) {
+    return NextResponse.json(
+      { error: "Failed to fetch data from Rakuten API" },
+      { status: res.status },
+    );
+  }
   const data = await res.json();
   const parsedResponse = BookResponseSchema.safeParse(data);
 
