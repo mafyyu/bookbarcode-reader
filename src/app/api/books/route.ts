@@ -18,9 +18,12 @@ export async function GET(request: NextRequest) {
 
   const ResponseSchema = z.object({
     title: z.string(),
+    titleKana: z.string(),
     author: z.string(),
+    publisherName: z.string(),
     largeImageUrl: z.url().optional(),
     isbn: IsbnSchema,
+    salesDate: z.date(),
   });
 
   const BookResponseSchema = z
@@ -34,9 +37,12 @@ export async function GET(request: NextRequest) {
     .transform((data) =>
       data.Items.map(({ Item }) => ({
         title: Item.title,
+        titleKana: Item.titleKana,
         author: Item.author,
+        publisherName: Item.publisherName,
         isbn: Item.isbn,
         image: Item.largeImageUrl ?? null,
+        salesDate: Item.salesDate,
       })),
     );
 
@@ -67,6 +73,5 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  console.log(parsedResponse.data);
   return NextResponse.json(parsedResponse.data);
 }
