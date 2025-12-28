@@ -1,0 +1,77 @@
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+
+export async function GET(request: NextRequest) {
+  const isbnNumber = request.nextUrl.searchParams.get("isbn");
+
+  if (isbnNumber === null || isbnNumber.trim() === "") {
+    return NextResponse.json(
+      { error: 'Missing required "isbn" query parameter' },
+      { status: 400 },
+    );
+  }
+  // isbnのバーコードかどうかをチェック
+  const IsbnSchema = z
+    .string()
+    .length(13)
+    .regex(/^(978|979)\d{10}$/, "Invalid ISBN");
+
+  const ResponseSchema = z.object({
+    title: z.string(),
+    titleKana: z.string(),
+    author: z.string(),
+    publisherName: z.string(),
+    largeImageUrl: z.url().optional(),
+    isbn: IsbnSchema,
+    salesDate: z.date(),
+  });
+
+  const BookResponseSchema = z
+    .object({
+      Items: z.array(
+        z.object({
+          Item: ResponseSchema,
+        }),
+      ),
+    })
+    .transform((data) =>
+      data.Items.map(({ Item }) => ({
+        title: Item.title,
+        titleKana: Item.titleKana,
+        author: Item.author,
+        publisherName: Item.publisherName,
+        isbn: Item.isbn,
+        image: Item.largeImageUrl ?? null,
+        salesDate: Item.salesDate,
+      })),
+    );
+
+  const parsed = IsbnSchema.safeParse(isbnNumber);
+
+  // バーコードが適していない場合にはエラーを返す
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid ISBN" }, { status: 400 });
+  }
+
+  const res = await fetch(
+    `${process.env.RAKUTEN_API_BASE_URL}&isbn=${isbnNumber}`,
+  );
+  if (!res.ok) {
+    return NextResponse.json(
+      { error: "Failed to fetch data from Rakuten API" },
+      { status: res.status },
+    );
+  }
+  const data = await res.json();
+  const parsedResponse = BookResponseSchema.safeParse(data);
+
+  if (!parsedResponse.success) {
+    console.error("Failed to parse Rakuten API response", parsedResponse.error);
+    return NextResponse.json(
+      { error: "Failed to parse response from book API" },
+      { status: 502 },
+    );
+  }
+
+  return NextResponse.json(parsedResponse.data);
+}

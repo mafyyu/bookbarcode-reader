@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  BrowserMultiFormatOneDReader,
-} from "@zxing/browser";
+import { BrowserMultiFormatOneDReader } from "@zxing/browser";
 import { useEffect, useRef, useState } from "react";
 import {
   BarcodeFormat,
@@ -43,7 +41,7 @@ export default function Home() {
       (result, error, controls) => {
         if (result) {
           const text = result.getText();
-          if (text.startsWith("978")) {
+          if (text.startsWith("978") || text.startsWith("979")) {
             setIsbn(text);
             console.log("isbn", text);
           } else return;
@@ -59,7 +57,13 @@ export default function Home() {
   return (
     <div>
       <div className={styles.scanner}>
-        <video ref={videoRef} className={styles.video} playsInline muted autoPlay />
+        <video
+          ref={videoRef}
+          className={styles.video}
+          playsInline
+          muted
+          autoPlay
+        />
         <div className={styles.scanLine}></div>
       </div>
 
