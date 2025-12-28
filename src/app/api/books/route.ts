@@ -4,6 +4,12 @@ import { z } from "zod";
 export async function GET(request: NextRequest) {
   const isbnNumber = request.nextUrl.searchParams.get("isbn");
 
+  if (isbnNumber === null || isbnNumber.trim() === "") {
+    return NextResponse.json(
+      { error: 'Missing required "isbn" query parameter' },
+      { status: 400 },
+    );
+  }
   // isbnのバーコードかどうかをチェック
   const IsbnSchema = z
     .string()
