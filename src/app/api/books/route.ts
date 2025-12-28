@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   const ResponseSchema = z.object({
     title: z.string(),
     author: z.string(),
-    largeImageUrl: z.url(),
+    largeImageUrl: z.url().optional(),
     isbn: IsbnSchema,
   });
 
