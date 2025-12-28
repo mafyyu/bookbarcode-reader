@@ -59,6 +59,14 @@ export async function GET(request: NextRequest) {
   const data = await res.json();
   const parsedResponse = BookResponseSchema.safeParse(data);
 
-  console.log(data.Items);
-  return NextResponse.json(parsedResponse);
+  if (!parsedResponse.success) {
+    console.error("Failed to parse Rakuten API response", parsedResponse.error);
+    return NextResponse.json(
+      { error: "Failed to parse response from book API" },
+      { status: 502 },
+    );
+  }
+
+  console.log(parsedResponse.data);
+  return NextResponse.json(parsedResponse.data);
 }
