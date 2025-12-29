@@ -21,7 +21,7 @@ const ResponseSchema = z.object({
   salesDate: z.string(),
 });
 
-const BookResponseSchema = z
+export const BookResponseSchema = z
   .object({
     Items: z.array(
       z.object({
