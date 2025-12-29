@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     publisherName: z.string(),
     largeImageUrl: z.url().optional(),
     isbn: IsbnSchema,
-    salesDate: z.date(),
+    salesDate: z.string(),
   });
 
   const BookResponseSchema = z
