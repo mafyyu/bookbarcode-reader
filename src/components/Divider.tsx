@@ -6,6 +6,7 @@ const styles = {
   },
   text: {
     paddingLeft: "10px",
+    fontSize: "20px",
   },
   divider: {
     width: "100%",
