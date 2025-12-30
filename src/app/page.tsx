@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { BrowserMultiFormatOneDReader } from "@zxing/browser";
 import { useEffect, useRef, useState } from "react";
@@ -31,10 +32,16 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (isLoaded && user) {
-      router.push("/");
+    if (!isLoaded || !user) return;
+
+    if (window.location.hash) {
+      window.history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search,
+      );
     }
-  }, [isLoaded, user, router]);
+  }, [isLoaded, user]);
 
   useEffect(() => {
     if (!videoRef.current) return;
