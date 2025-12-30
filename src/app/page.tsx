@@ -2,14 +2,19 @@
 
 import { BrowserMultiFormatOneDReader } from "@zxing/browser";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   BarcodeFormat,
   DecodeHintType,
   NotFoundException,
 } from "@zxing/library";
 import styles from "./page.module.css";
+import { useUser } from "@clerk/nextjs";
 
 export default function Home() {
+  const { user, isLoaded } = useUser();
+  const router = useRouter();
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const readerRef = useRef<BrowserMultiFormatOneDReader | null>(null);
 
@@ -24,6 +29,12 @@ export default function Home() {
       aspectRatio: { ideal: 2 / 1 },
     },
   };
+
+  useEffect(() => {
+    if (isLoaded && user) {
+      router.push("/");
+    }
+  }, [isLoaded, user, router]);
 
   useEffect(() => {
     if (!videoRef.current) return;
