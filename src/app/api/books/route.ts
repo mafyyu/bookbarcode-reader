@@ -21,7 +21,7 @@ const ResponseSchema = z.object({
   salesDate: z.string(),
 });
 
-export const BookResponseSchema = z
+const BookResponseSchema = z
   .object({
     Items: z.array(
       z.object({
@@ -35,8 +35,8 @@ export const BookResponseSchema = z
       titleKana: Item.titleKana,
       author: Item.author,
       publisherName: Item.publisherName,
-      isbn: Item.isbn,
       image: Item.largeImageUrl ?? null,
+      isbn: Item.isbn,
       salesDate: Item.salesDate,
     })),
   );
