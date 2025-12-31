@@ -1,6 +1,7 @@
 "use client";
 import { BrowserMultiFormatOneDReader } from "@zxing/browser";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   BarcodeFormat,
   DecodeHintType,
@@ -13,18 +14,26 @@ import OwnedStatusBadge from "@/components/OwnedStatusBadge";
 import LibraryActionButton from "@/components/LibraryActionButton";
 import styles from "./page.module.css";
 import z from "zod";
-import { BookResponseSchema } from "../api/books/route";
+import { BookSchema } from "@/lib/schema/book";
+import { addBook } from "@/lib/addBook";
+import { addUserBook } from "@/lib/addUserBook";
+import { updateOwnStatus } from "@/lib/updateOwnStatus";
 
-type Book = z.infer<typeof BookResponseSchema>;
+type Book = z.infer<typeof BookSchema>;
+type LibraryStatus = "not_in_library" | "in_library" | "owned";
 
 export default function Scan() {
+  const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const readerRef = useRef<BrowserMultiFormatOneDReader | null>(null);
 
   const [isbn, setIsbn] = useState<string>("");
   const [isScanning, setIsScanning] = useState(true);
   const [cameraReady, setCameraReady] = useState(false);
-  const [result, setResult] = useState<Book | null>(null);
+  const [result, setResult] = useState<Book[] | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [status, setStatus] = useState<LibraryStatus>("not_in_library");
+  const [loading, setLoading] = useState<boolean>(false);
 
   // カメラ操作
   useEffect(() => {
@@ -70,17 +79,61 @@ export default function Scan() {
   useEffect(() => {
     if (isbn.length === 13) {
       const fetchBook = async () => {
-        const res = await fetch("/api/books", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ isbn }),
-        });
-        const data = await res.json();
-        setResult(data);
+        setLoading(true);
+        try {
+          const res = await fetch("/api/books", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ isbn }),
+          });
+          const data = await res.json();
+          setResult(data);
+
+          if (data && data.length > 0) {
+            const userBooksRes = await fetch(
+              `/api/user-books?isbn=${data[0].isbn}`,
+            );
+            const resData = await userBooksRes.json();
+            setStatus(resData.status);
+          }
+        } finally {
+          setLoading(false);
+        }
       };
       fetchBook();
     }
   }, [isbn]);
+
+  // dbに追加する処理
+  const handleAdd = async (isOwned: boolean) => {
+    setIsSaving(true);
+    if (!result) {
+      setIsSaving(false);
+      return;
+    }
+    try {
+      await addBook(result[0]);
+      await addUserBook(result[0], isOwned);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // 購入済みに変更する
+  const handleUpdate = async () => {
+    if (!result) {
+      return;
+    }
+    try {
+      await updateOwnStatus(result[0], true);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -131,14 +184,24 @@ export default function Scan() {
             </div>
           </div>
         )}
-        {!isScanning && result && (
+        {!isScanning && result && !loading && (
           <div>
             <div className={styles.divider}>
               <Divider text="スキャン結果"></Divider>
             </div>
             <BookDetail book={result}></BookDetail>
-            <OwnedStatusBadge isOwned={true}></OwnedStatusBadge>
-            <LibraryActionButton status={"owned"}></LibraryActionButton>
+            <OwnedStatusBadge status={status}></OwnedStatusBadge>
+            <LibraryActionButton
+              status={status}
+              onAddOwned={
+                status == "not_in_library" ? () => handleAdd(true) : undefined
+              }
+              onAddNotOwned={
+                status == "not_in_library" ? () => handleAdd(false) : undefined
+              }
+              onChangeOwned={status == "in_library" ? handleUpdate : undefined}
+              disabled={isSaving}
+            ></LibraryActionButton>
             <button
               className={styles.rescan}
               onClick={() => {

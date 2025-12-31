@@ -12,7 +12,7 @@ const styles = {
     padding: "3px",
     fontSize: "13px",
   },
-  notOwned: {
+  inLibrary: {
     display: "flex",
     borderRadius: "40px",
     width: "100px",
@@ -25,14 +25,46 @@ const styles = {
     padding: "3px",
     fontSize: "13px",
   },
+  notInLibrary: {
+    display: "flex",
+    borderRadius: "40px",
+    width: "100px",
+    backgroundColor: "#F2F2F2CC",
+    color: "black",
+    alignItems: "center",
+    justifyContent: "center",
+    aspectRatio: "4/1",
+    margin: "auto",
+    padding: "3px",
+    fontSize: "13px",
+  },
 };
+type LibraryStatus = "not_in_library" | "in_library" | "owned";
 
-export default function OwnedStatusBadge({ isOwned }: { isOwned: boolean }) {
+export default function OwnedStatusBadge({
+  status,
+}: {
+  status: LibraryStatus;
+}) {
+  let text;
+  let style: React.CSSProperties;
+  switch (status) {
+    case "owned":
+      text = "購入済み";
+      style = styles.owned;
+      break;
+    case "in_library":
+      text = "未購入";
+      style = styles.inLibrary;
+      break;
+    case "not_in_library":
+      text = "未登録";
+      style = styles.notInLibrary;
+      break;
+  }
   return (
     <>
-      <div style={isOwned ? styles.owned : styles.notOwned}>
-        {isOwned ? "所有済み" : "未購入"}
-      </div>
+      <div style={style}>{text}</div>
     </>
   );
 }
