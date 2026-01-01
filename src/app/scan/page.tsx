@@ -91,7 +91,7 @@ export default function Scan() {
 
           if (data && data.length > 0) {
             const userBooksRes = await fetch(
-              `/api/user-books?isbn=${data[0].isbn}`,
+              `/api/user-books/status?isbn=${data[0].isbn}`,
             );
             const resData = await userBooksRes.json();
             setStatus(resData.status);
