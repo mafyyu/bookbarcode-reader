@@ -12,9 +12,14 @@
   justify-content: center;
 }
 
-.add {
+.addAlreadybuy {
   background-color: #58ab64;
   color: white;
+}
+.addNotbuy {
+  background-color: #FFB877;
+  color: white;
+  margin: 10px auto 0 auto;
 }
 
 .changeOwned {
@@ -27,7 +32,10 @@
   color: #8a8a8a;
 }
 
-.add:hover{
+.addAlreadybuy:hover{
+  opacity: 0.8;
+}
+.addNotbuy:hover{
   opacity: 0.8;
 }
 

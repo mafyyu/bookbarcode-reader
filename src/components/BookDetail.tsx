@@ -1,4 +1,4 @@
-import { BookResponseSchema } from "@/app/api/books/route";
+import { BookResponseSchema } from "@/lib/schema/book";
 import z from "zod";
 
 const styles = {
