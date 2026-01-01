@@ -1,45 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-
-// isbnのバーコードかどうかをチェック
-const IsbnSchema = z
-  .string()
-  .length(13)
-  .regex(/^(978|979)\d{10}$/, "Invalid ISBN");
-
-const bodySchema = z.object({
-  isbn: IsbnSchema,
-});
-
-const ResponseSchema = z.object({
-  title: z.string(),
-  titleKana: z.string(),
-  author: z.string(),
-  publisherName: z.string(),
-  largeImageUrl: z.url().optional(),
-  isbn: IsbnSchema,
-  salesDate: z.string(),
-});
-
-const BookResponseSchema = z
-  .object({
-    Items: z.array(
-      z.object({
-        Item: ResponseSchema,
-      }),
-    ),
-  })
-  .transform((data) =>
-    data.Items.map(({ Item }) => ({
-      title: Item.title,
-      titleKana: Item.titleKana,
-      author: Item.author,
-      publisherName: Item.publisherName,
-      image: Item.largeImageUrl ?? null,
-      isbn: Item.isbn,
-      salesDate: Item.salesDate,
-    })),
-  );
+import { bodySchema, BookResponseSchema } from "@/lib/schema/book";
 
 export async function POST(request: NextRequest) {
   let body;
@@ -62,7 +22,7 @@ export async function POST(request: NextRequest) {
   if (!res.ok) {
     return NextResponse.json(
       { error: "Failed to fetch data from Rakuten API" },
-      { status: res.status },
+      { status: 502 },
     );
   }
   const data = await res.json();
@@ -71,10 +31,10 @@ export async function POST(request: NextRequest) {
   if (!parsedResponse.success) {
     console.error("Failed to parse Rakuten API response", parsedResponse.error);
     return NextResponse.json(
-      { error: "Failed to parse response from book API" },
+      { error: "Invalid book API response" },
       { status: 502 },
     );
   }
 
-  return NextResponse.json(parsedResponse.data);
+  return NextResponse.json(parsedResponse.data, { status: 200 });
 }

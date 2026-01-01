@@ -34,6 +34,7 @@ export async function POST(req: NextRequest) {
         author: book.author,
         publisherName: book.publisherName,
         image: book.image,
+        caption: book.caption,
         salesDate: book.salesDate,
       },
       { onConflict: "isbn" },
