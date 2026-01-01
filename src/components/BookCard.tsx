@@ -41,7 +41,7 @@ const styles = {
 
 type Book = {
   imageUrl: string;
-  isOwned: boolean;
+  isOwned: "in_library" | "owned";
 };
 
 export default function BookCard({ book }: { book: Book }) {

@@ -49,7 +49,7 @@ export async function GET() {
     const result = data
       .filter((row) => row.books !== null)
       .map((row) => ({
-        isOwned: row.is_owned,
+        isOwned: row.is_owned ? "in_library" : "owned",
         book: row.books,
       }));
 
