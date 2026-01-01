@@ -131,7 +131,7 @@ export default function Scan() {
       await updateOwnStatus(result[0], true);
       router.push("/");
     } catch (error) {
-      console.log(error);
+      console.error("Failed to update book status:", error);
     }
   };
 
