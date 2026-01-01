@@ -41,22 +41,32 @@ const styles = {
 
 type Book = {
   imageUrl: string;
-  isOwned: "in_library" | "owned";
+  isOwned: "owned" | "in_library";
 };
 
 export default function BookCard({ book }: { book: Book }) {
-  return (
-    <>
-      <div style={styles.card}>
-        <img style={styles.cover} src={book.imageUrl} alt="bookCover" />
-        <div style={book.isOwned ? styles.ownedBadge : styles.wantedBadge}>
-          <img
-            style={styles.badgeIcon}
-            src={book.isOwned ? "/owned.svg" : "/wanted.svg"}
-            alt="badge"
-          />
-        </div>
-      </div>
-    </>
-  );
+  switch (book.isOwned) {
+    case "owned":
+      return (
+        <>
+          <div style={styles.card}>
+            <img style={styles.cover} src={book.imageUrl} alt="bookCover" />
+            <div style={styles.ownedBadge}>
+              <img style={styles.badgeIcon} src={"/owned.svg"} alt="badge" />
+            </div>
+          </div>
+        </>
+      );
+    case "in_library":
+      return (
+        <>
+          <div style={styles.card}>
+            <img style={styles.cover} src={book.imageUrl} alt="bookCover" />
+            <div style={styles.wantedBadge}>
+              <img style={styles.badgeIcon} src={"/wanted.svg"} alt="badge" />
+            </div>
+          </div>
+        </>
+      );
+  }
 }
