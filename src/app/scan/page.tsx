@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from "@zxing/library";
 import CloseHeader from "@/components/CloseHeader";
-import BookDetail from "@/components/BookDetail";
+import BookPreview from "@/components/BookPreview";
 import Divider from "@/components/Divider";
 import OwnedStatusBadge from "@/components/OwnedStatusBadge";
 import LibraryActionButton from "@/components/LibraryActionButton";
@@ -189,7 +189,7 @@ export default function Scan() {
             <div className={styles.divider}>
               <Divider text="スキャン結果"></Divider>
             </div>
-            <BookDetail book={result}></BookDetail>
+            <BookPreview book={result}></BookPreview>
             <OwnedStatusBadge status={status}></OwnedStatusBadge>
             <LibraryActionButton
               status={status}

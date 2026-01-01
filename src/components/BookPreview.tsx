@@ -1,5 +1,5 @@
-import { UserBook } from "@/app/page";
-import OwnedStatusBadge from "./OwnedStatusBadge";
+import { BookResponseSchema } from "@/lib/schema/book";
+import z from "zod";
 
 const styles = {
   container: {
@@ -38,20 +38,19 @@ const styles = {
   },
 } as const;
 
-export default function BookDetail({ userBook }: { userBook: UserBook }) {
-  const { book, isOwned } = userBook;
+type Book = z.infer<typeof BookResponseSchema>;
 
+export default function BookPreview({ book }: { book: Book }) {
   return (
     <>
       <div style={styles.container}>
         <div style={styles.imgContainer}>
-          <img style={styles.cover} src={book.image} alt="" />
+          <img style={styles.cover} src={book[0]?.image || ""} alt="" />
         </div>
         <div style={styles.contents}>
-          <h3 style={styles.title}>{book.title}</h3>
-          <h4 style={styles.author}>{book.author}</h4>
-          <h4 style={styles.author}>ISBN-{book.isbn}</h4>
-          <OwnedStatusBadge status={isOwned}></OwnedStatusBadge>
+          <h3 style={styles.title}>{book[0]?.title}</h3>
+          <h4 style={styles.author}>{book[0]?.author}</h4>
+          <h4 style={styles.author}>ISBN-{book[0]?.isbn}</h4>
         </div>
       </div>
     </>
