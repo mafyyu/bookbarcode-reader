@@ -6,6 +6,10 @@
   align-items: center;
 }
 
+.main {
+  height: 100dvh;
+}
+
 .footer {
   width: 100%;
   display: flex;
