@@ -50,7 +50,7 @@ export default function BookPreview({ book }: { book: Book }) {
             <Image
               style={styles.cover}
               src={book[0]?.image}
-              alt=""
+              alt={book[0]?.title ? `${book[0]?.title} の表紙` : "書籍の表紙"}
               width={120}
               height={180}
               sizes="120px"
