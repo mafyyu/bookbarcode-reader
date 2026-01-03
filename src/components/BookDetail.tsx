@@ -84,7 +84,7 @@ export default function BookDetail({ userBook, onClose }: BookCardProps) {
               layoutId={`bookcover-${book.isbn}`}
               style={styles.cover}
               src={book.image}
-              alt=""
+              alt={`「${book.title}」の表紙`}
               width={120}
               height={180}
               sizes="120px"
