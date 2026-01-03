@@ -1,8 +1,11 @@
 import { UserBook } from "@/app/page";
 import OwnedStatusBadge from "./OwnedStatusBadge";
 import { motion } from "motion/react";
+import Image from "next/image";
 import Divider from "./Divider";
 import CloseHeader from "./CloseHeader";
+
+const MotionImage = motion.create(Image);
 
 const styles = {
   header: {
@@ -76,12 +79,17 @@ export default function BookDetail({ userBook, onClose }: BookCardProps) {
       </header> */}
       <div style={styles.container} onClick={onClose}>
         <div style={styles.imgContainer}>
-          <motion.img
-            layoutId={`bookcover-${book.isbn}`}
-            style={styles.cover}
-            src={book.image}
-            alt=""
-          />
+          {book.image && (
+            <MotionImage
+              layoutId={`bookcover-${book.isbn}`}
+              style={styles.cover}
+              src={book.image}
+              alt=""
+              width={120}
+              height={180}
+              sizes="120px"
+            />
+          )}
         </div>
         <div style={styles.contents}>
           <h3 style={styles.title}>{book.title}</h3>

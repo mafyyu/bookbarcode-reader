@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const styles = {
   button: {
     display: "flex",
@@ -21,7 +23,13 @@ export default function ScanButton() {
   return (
     <>
       <a href="/scan" style={styles.button}>
-        <img style={styles.scanIcon} src="/barcode_scan.svg" alt="scanButton" />
+        <Image
+          style={styles.scanIcon}
+          src="/barcode_scan.svg"
+          alt="scanButton"
+          width={60}
+          height={60}
+        />
       </a>
     </>
   );

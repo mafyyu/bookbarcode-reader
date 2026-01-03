@@ -49,6 +49,9 @@ type BookCardProps = {
 };
 
 import { motion } from "motion/react";
+import Image from "next/image";
+
+const MotionImage = motion.create(Image);
 
 export default function BookCard({ book, onClick }: BookCardProps) {
   switch (book.isOwned) {
@@ -56,14 +59,23 @@ export default function BookCard({ book, onClick }: BookCardProps) {
       return (
         <>
           <div style={styles.card} onClick={onClick}>
-            <motion.img
+            <MotionImage
               layoutId={`bookcover-${book.isbn}`}
               style={styles.cover}
               src={book.imageUrl}
               alt="bookCover"
+              width={120}
+              height={180}
+              sizes="120px"
             />
             <div style={styles.ownedBadge}>
-              <img style={styles.badgeIcon} src={"/owned.svg"} alt="badge" />
+              <Image
+                style={styles.badgeIcon}
+                src="/owned.svg"
+                alt="owned"
+                width={20}
+                height={20}
+              />
             </div>
           </div>
         </>
@@ -72,14 +84,23 @@ export default function BookCard({ book, onClick }: BookCardProps) {
       return (
         <>
           <div style={styles.card} onClick={onClick}>
-            <motion.img
+            <MotionImage
               layoutId={`bookcover-${book.isbn}`}
               style={styles.cover}
               src={book.imageUrl}
               alt="bookCover"
+              width={120}
+              height={180}
+              sizes="120px"
             />
             <div style={styles.wantedBadge}>
-              <img style={styles.badgeIcon} src={"/wanted.svg"} alt="badge" />
+              <Image
+                style={styles.badgeIcon}
+                src="/wanted.svg"
+                alt="wanted"
+                width={20}
+                height={20}
+              />
             </div>
           </div>
         </>

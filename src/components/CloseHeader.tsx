@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const styles = {
@@ -17,7 +18,13 @@ export default function CloseHeader() {
   return (
     <>
       <Link href="/" style={styles.LinkContainer}>
-        <img style={styles.closeIcon} src="/close.svg" alt="" />
+        <Image
+          style={styles.closeIcon}
+          src="/close.svg"
+          alt="close"
+          width={40}
+          height={40}
+        />
       </Link>
     </>
   );
