@@ -74,10 +74,10 @@ export default function BookDetail({ userBook, onClose }: BookCardProps) {
 
   return (
     <>
-      {/* <header style={styles.header}>
-        <CloseHeader></CloseHeader>
-      </header> */}
-      <div style={styles.container} onClick={onClose}>
+      <header style={styles.header}>
+        <CloseHeader onClose={() => onClose()} />
+      </header>
+      <div style={styles.container}>
         <div style={styles.imgContainer}>
           {book.image && (
             <MotionImage

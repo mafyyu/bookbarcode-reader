@@ -7,6 +7,8 @@ const styles = {
     position: "absolute",
     top: "20px",
     right: "20px",
+    background: "none",
+    border: "none",
   },
   closeIcon: {
     width: "40px",
@@ -14,10 +16,13 @@ const styles = {
   },
 } as const;
 
-export default function CloseHeader() {
+type CloseHeaderProps = {
+  onClose: () => void;
+};
+export default function CloseHeader({ onClose }: CloseHeaderProps) {
   return (
     <>
-      <Link href="/" style={styles.LinkContainer}>
+      <button onClick={onClose} style={styles.LinkContainer}>
         <Image
           style={styles.closeIcon}
           src="/close.svg"
@@ -25,7 +30,7 @@ export default function CloseHeader() {
           width={40}
           height={40}
         />
-      </Link>
+      </button>
     </>
   );
 }
