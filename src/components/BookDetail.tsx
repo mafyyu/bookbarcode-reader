@@ -75,7 +75,7 @@ export default function BookDetail({ userBook, onClose }: BookDetailProps) {
   return (
     <>
       <header style={styles.header}>
-        <CloseHeader onClose={() => onClose()} />
+        <CloseHeader onClose={onClose} />
       </header>
       <div style={styles.container}>
         <div style={styles.imgContainer}>
