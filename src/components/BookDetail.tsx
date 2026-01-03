@@ -97,7 +97,6 @@ export default function BookDetail({ userBook, onClose }: BookDetailProps) {
           <h4 style={styles.author}>ISBN-{book.isbn}</h4>
           <OwnedStatusBadge status={isOwned}></OwnedStatusBadge>
           <Divider text={"あらすじ"}></Divider>
-          <div style={styles.dividerContainer}></div>
           <h4 style={styles.author}>{book.caption}</h4>
         </div>
       </div>
