@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import BookDetail from "@/components/BookDetail";
 import { AnimatePresence } from "motion/react";
 import styles from "./page.module.css";
+import { style } from "motion/react-client";
 
 export type UserBook = {
   isOwned: "in_library" | "owned";
@@ -39,29 +40,32 @@ export default function Home() {
 
   return (
     <>
-      <AnimatePresence mode="wait">
-        {activeCard && (
-          <BookDetail
-            userBook={activeCard}
-            onClose={() => setActiveCard(null)}
-          ></BookDetail>
-        )}
-      </AnimatePresence>
-      <div className={styles.container}>
-        {books.map((userBook) => (
-          <BookCard
-            key={userBook.book.isbn}
-            book={{
-              isbn: userBook.book.isbn,
-              imageUrl: userBook.book.image,
-              isOwned: userBook.isOwned,
-            }}
-            onClick={() => setActiveCard(userBook)}
-          />
-        ))}
-      </div>
-
-      <ScanButton />
+      <main>
+        <AnimatePresence mode="wait">
+          {activeCard && (
+            <BookDetail
+              userBook={activeCard}
+              onClose={() => setActiveCard(null)}
+            ></BookDetail>
+          )}
+        </AnimatePresence>
+        <div className={styles.container}>
+          {books.map((userBook) => (
+            <BookCard
+              key={userBook.book.isbn}
+              book={{
+                isbn: userBook.book.isbn,
+                imageUrl: userBook.book.image,
+                isOwned: userBook.isOwned,
+              }}
+              onClick={() => setActiveCard(userBook)}
+            />
+          ))}
+        </div>
+      </main>
+      <footer className={styles.footer}>
+        <ScanButton />
+      </footer>
     </>
   );
 }

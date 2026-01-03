@@ -5,3 +5,10 @@
   justify-items: center;
   align-items: center;
 }
+
+.footer {
+  width: 100%;
+  display: flex;
+  position: fixed;
+  bottom: 0;
+}
