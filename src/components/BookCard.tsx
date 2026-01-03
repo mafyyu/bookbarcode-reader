@@ -105,5 +105,7 @@ export default function BookCard({ book, onClick }: BookCardProps) {
           </div>
         </>
       );
+    default:
+      return null;
   }
 }
