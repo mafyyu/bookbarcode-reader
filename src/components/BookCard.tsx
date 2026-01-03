@@ -39,18 +39,29 @@ const styles = {
   },
 } as const;
 
-type Book = {
-  imageUrl: string;
-  isOwned: "owned" | "in_library";
+type BookCardProps = {
+  book: {
+    isbn: string;
+    imageUrl: string;
+    isOwned: "owned" | "in_library";
+  };
+  onClick: () => void;
 };
 
-export default function BookCard({ book }: { book: Book }) {
+import { motion } from "motion/react";
+
+export default function BookCard({ book, onClick }: BookCardProps) {
   switch (book.isOwned) {
     case "owned":
       return (
         <>
-          <div style={styles.card}>
-            <img style={styles.cover} src={book.imageUrl} alt="bookCover" />
+          <div style={styles.card} onClick={onClick}>
+            <motion.img
+              layoutId={`bookcover-${book.isbn}`}
+              style={styles.cover}
+              src={book.imageUrl}
+              alt="bookCover"
+            />
             <div style={styles.ownedBadge}>
               <img style={styles.badgeIcon} src={"/owned.svg"} alt="badge" />
             </div>
@@ -60,8 +71,13 @@ export default function BookCard({ book }: { book: Book }) {
     case "in_library":
       return (
         <>
-          <div style={styles.card}>
-            <img style={styles.cover} src={book.imageUrl} alt="bookCover" />
+          <div style={styles.card} onClick={onClick}>
+            <motion.img
+              layoutId={`bookcover-${book.isbn}`}
+              style={styles.cover}
+              src={book.imageUrl}
+              alt="bookCover"
+            />
             <div style={styles.wantedBadge}>
               <img style={styles.badgeIcon} src={"/wanted.svg"} alt="badge" />
             </div>
