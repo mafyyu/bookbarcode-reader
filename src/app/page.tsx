@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import BookDetail from "@/components/BookDetail";
 import { AnimatePresence } from "motion/react";
 import styles from "./page.module.css";
-import { style } from "motion/react-client";
 
 export type UserBook = {
   isOwned: "in_library" | "owned";
