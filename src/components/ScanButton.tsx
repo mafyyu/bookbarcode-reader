@@ -3,6 +3,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    margin: "20px auto",
     borderRadius: "50%",
     width: "100px",
     height: "100px",
