@@ -64,12 +64,12 @@ const styles = {
   },
 } as const;
 
-type BookCardProps = {
+type BookDetailProps = {
   userBook: UserBook;
   onClose: () => void;
 };
 
-export default function BookDetail({ userBook, onClose }: BookCardProps) {
+export default function BookDetail({ userBook, onClose }: BookDetailProps) {
   const { book, isOwned } = userBook;
 
   return (
