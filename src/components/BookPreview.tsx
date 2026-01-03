@@ -1,4 +1,5 @@
 import { BookResponseSchema } from "@/lib/schema/book";
+import Image from "next/image";
 import z from "zod";
 
 const styles = {
@@ -45,7 +46,16 @@ export default function BookPreview({ book }: { book: Book }) {
     <>
       <div style={styles.container}>
         <div style={styles.imgContainer}>
-          <img style={styles.cover} src={book[0]?.image || ""} alt="" />
+          {book[0]?.image && (
+            <Image
+              style={styles.cover}
+              src={book[0]?.image}
+              alt={book[0]?.title ? `${book[0]?.title} の表紙` : "書籍の表紙"}
+              width={120}
+              height={180}
+              sizes="120px"
+            />
+          )}
         </div>
         <div style={styles.contents}>
           <h3 style={styles.title}>{book[0]?.title}</h3>

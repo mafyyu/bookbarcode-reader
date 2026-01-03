@@ -90,3 +90,13 @@
   font-size: 15px;
   font-family: inherit;  /*フォントを継承*/
 }
+
+.mainContainer {
+  width: 100%;
+  max-width: 80%;
+  margin: 0 auto;   /* 中央寄せ */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+

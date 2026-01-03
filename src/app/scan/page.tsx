@@ -38,6 +38,7 @@ export default function Scan() {
   // カメラ操作
   useEffect(() => {
     if (!videoRef.current) return;
+    let stream: MediaStream | null = null;
 
     const constraints: MediaStreamConstraints = {
       audio: false,
@@ -60,6 +61,9 @@ export default function Scan() {
       constraints,
       videoRef.current,
       (result, error, controls) => {
+        if (!stream && videoRef.current?.srcObject instanceof MediaStream) {
+          stream = videoRef.current.srcObject;
+        }
         if (result) {
           const text = result.getText();
           if (text.startsWith("978") || text.startsWith("979")) {
@@ -73,6 +77,9 @@ export default function Scan() {
         }
       },
     );
+    return () => {
+      stream?.getTracks().forEach((track) => track.stop());
+    };
   }, [isScanning]);
 
   // 情報のfetch
@@ -138,7 +145,11 @@ export default function Scan() {
   return (
     <>
       <header className={styles.header}>
-        <CloseHeader></CloseHeader>
+        <CloseHeader
+          onClose={() => {
+            router.push("/");
+          }}
+        />
       </header>
       <main>
         {isScanning && (
@@ -185,10 +196,8 @@ export default function Scan() {
           </div>
         )}
         {!isScanning && result && !loading && (
-          <div>
-            <div className={styles.divider}>
-              <Divider text="スキャン結果"></Divider>
-            </div>
+          <div className={styles.mainContainer}>
+            <Divider text="スキャン結果"></Divider>
             <BookPreview book={result}></BookPreview>
             <OwnedStatusBadge status={status}></OwnedStatusBadge>
             <LibraryActionButton

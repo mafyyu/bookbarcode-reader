@@ -1,27 +1,25 @@
 const styles = {
   container: {
-    display: "flex",
-    width: "80%",
-    flexDirection: "column",
+    width: "100%",
+    margin: "0 0 24px 0",
   },
   text: {
-    paddingLeft: "10px",
-    fontSize: "20px",
+    fontSize: "18px",
+    fontWeight: 600,
+    marginBottom: "8px",
   },
-  divider: {
+  line: {
     width: "100%",
-    height: "2px",
+    height: "1px",
     backgroundColor: "#E5E7EB",
   },
 } as const;
 
 export default function Divider({ text }: { text: string }) {
   return (
-    <>
-      <div style={styles.container}>
-        <h3 style={styles.text}>{text}</h3>
-        <div style={styles.divider}></div>
-      </div>
-    </>
+    <div style={styles.container}>
+      <div style={styles.text}>{text}</div>
+      <div style={styles.line} />
+    </div>
   );
 }

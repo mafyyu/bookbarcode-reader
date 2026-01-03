@@ -39,24 +39,73 @@ const styles = {
   },
 } as const;
 
-type Book = {
-  imageUrl: string;
-  isOwned: "in_library" | "owned";
+type BookCardProps = {
+  book: {
+    isbn: string;
+    imageUrl: string;
+    isOwned: "owned" | "in_library";
+  };
+  onClick: () => void;
 };
 
-export default function BookCard({ book }: { book: Book }) {
-  return (
-    <>
-      <div style={styles.card}>
-        <img style={styles.cover} src={book.imageUrl} alt="bookCover" />
-        <div style={book.isOwned ? styles.ownedBadge : styles.wantedBadge}>
-          <img
-            style={styles.badgeIcon}
-            src={book.isOwned ? "/owned.svg" : "/wanted.svg"}
-            alt="badge"
-          />
-        </div>
-      </div>
-    </>
-  );
+import { motion } from "motion/react";
+import Image from "next/image";
+
+const MotionImage = motion.create(Image);
+
+export default function BookCard({ book, onClick }: BookCardProps) {
+  switch (book.isOwned) {
+    case "owned":
+      return (
+        <>
+          <div style={styles.card} onClick={onClick}>
+            <MotionImage
+              layoutId={`bookcover-${book.isbn}`}
+              style={styles.cover}
+              src={book.imageUrl}
+              alt="bookCover"
+              width={120}
+              height={180}
+              sizes="120px"
+            />
+            <div style={styles.ownedBadge}>
+              <Image
+                style={styles.badgeIcon}
+                src="/owned.svg"
+                alt="owned"
+                width={20}
+                height={20}
+              />
+            </div>
+          </div>
+        </>
+      );
+    case "in_library":
+      return (
+        <>
+          <div style={styles.card} onClick={onClick}>
+            <MotionImage
+              layoutId={`bookcover-${book.isbn}`}
+              style={styles.cover}
+              src={book.imageUrl}
+              alt="bookCover"
+              width={120}
+              height={180}
+              sizes="120px"
+            />
+            <div style={styles.wantedBadge}>
+              <Image
+                style={styles.badgeIcon}
+                src="/wanted.svg"
+                alt="wanted"
+                width={20}
+                height={20}
+              />
+            </div>
+          </div>
+        </>
+      );
+    default:
+      return null;
+  }
 }
