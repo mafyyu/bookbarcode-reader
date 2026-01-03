@@ -11,12 +11,12 @@ const styles = {
   header: {
     height: "70px",
     position: "relative",
-    zIndex: "100",
+    zIndex: 100,
   },
   container: {
     position: "fixed",
     inset: "0",
-    zIndex: "50",
+    zIndex: 50,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
