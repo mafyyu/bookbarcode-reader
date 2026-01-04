@@ -54,6 +54,8 @@ export default function Scan() {
         const resData = await userBooksRes.json();
         setStatus(resData.status);
       }
+    } catch (error) {
+      console.log("fetchbook error", error);
     } finally {
       setLoading(false);
     }
