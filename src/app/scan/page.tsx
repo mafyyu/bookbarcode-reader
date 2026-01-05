@@ -1,6 +1,6 @@
 "use client";
 import { BrowserMultiFormatOneDReader } from "@zxing/browser";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   BarcodeFormat,
@@ -35,6 +35,32 @@ export default function Scan() {
   const [status, setStatus] = useState<LibraryStatus>("not_in_library");
   const [loading, setLoading] = useState<boolean>(false);
 
+  // 情報の取得
+  const fetchBook = useCallback(async (isbn: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/books", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isbn }),
+      });
+      const data = await res.json();
+      setResult(data);
+
+      if (data && data.length > 0) {
+        const userBooksRes = await fetch(
+          `/api/user-books/status?isbn=${data[0].isbn}`,
+        );
+        const resData = await userBooksRes.json();
+        setStatus(resData.status);
+      }
+    } catch (error) {
+      console.log("fetchbook error", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   // カメラ操作
   useEffect(() => {
     if (!videoRef.current) return;
@@ -68,6 +94,7 @@ export default function Scan() {
           const text = result.getText();
           if (text.startsWith("978") || text.startsWith("979")) {
             setIsbn(text);
+            fetchBook(text);
             controls.stop();
             setIsScanning(false);
           } else return;
@@ -80,36 +107,7 @@ export default function Scan() {
     return () => {
       stream?.getTracks().forEach((track) => track.stop());
     };
-  }, [isScanning]);
-
-  // 情報のfetch
-  useEffect(() => {
-    if (isbn.length === 13) {
-      const fetchBook = async () => {
-        setLoading(true);
-        try {
-          const res = await fetch("/api/books", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ isbn }),
-          });
-          const data = await res.json();
-          setResult(data);
-
-          if (data && data.length > 0) {
-            const userBooksRes = await fetch(
-              `/api/user-books/status?isbn=${data[0].isbn}`,
-            );
-            const resData = await userBooksRes.json();
-            setStatus(resData.status);
-          }
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchBook();
-    }
-  }, [isbn]);
+  }, [isScanning, fetchBook]);
 
   // dbに追加する処理
   const handleAdd = async (isOwned: boolean) => {
@@ -189,6 +187,10 @@ export default function Scan() {
                 className={styles.searchButton}
                 type="button"
                 disabled={isbn.length != 13 || !isScanning}
+                onClick={() => {
+                  setIsScanning(false);
+                  fetchBook(isbn);
+                }}
               >
                 検索
               </button>

@@ -17,7 +17,6 @@ export default function LibraryActionButton({
   onChangeOwned,
   disabled,
 }: Props) {
-  console.log("aaa", status);
   switch (status) {
     case "not_in_library":
       return (
