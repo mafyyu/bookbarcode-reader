@@ -119,7 +119,7 @@ export default function Scan() {
     try {
       await addBook(result[0]);
       await addUserBook(result[0], isOwned);
-      router.push("/");
+      router.push("/library");
     } catch (error) {
       console.log(error);
     } finally {
@@ -134,7 +134,7 @@ export default function Scan() {
     }
     try {
       await updateOwnStatus(result[0], true);
-      router.push("/");
+      router.push("/library");
     } catch (error) {
       console.error("Failed to update book status:", error);
     }
@@ -145,7 +145,7 @@ export default function Scan() {
       <header className={styles.header}>
         <CloseHeader
           onClose={() => {
-            router.push("/");
+            router.push("/library");
           }}
         />
       </header>

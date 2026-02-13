@@ -15,7 +15,7 @@ const styles = {
   },
 } as const;
 
-export default function Divider({ text }: { text: string }) {
+export default function Divider({ text }: { text?: string }) {
   return (
     <div style={styles.container}>
       <div style={styles.text}>{text}</div>
