@@ -1,4 +1,4 @@
-import { UserBook } from "@/app/page";
+import { UserBook } from "@/app/library/page";
 import OwnedStatusBadge from "./OwnedStatusBadge";
 import { motion } from "motion/react";
 import Image from "next/image";
