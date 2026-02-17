@@ -2,7 +2,7 @@ const style = {
   container: {
     display: "flex",
     gap: "12px",
-    justifyContents: "center",
+    justifyContent: "center",
     alignItems: "center",
   },
   budge: {
