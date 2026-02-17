@@ -5,7 +5,7 @@ const style = {
     justifyContent: "center",
     alignItems: "center",
   },
-  budge: {
+  badge: {
     display: "flex",
     borderRadius: "40px",
     width: "100px",
@@ -64,7 +64,7 @@ export default function SegmentedControl({
           return (
             <button
               style={{
-                ...style.budge,
+                ...style.badge,
                 ...(status === o.value ? STATUS_STYLE[o.value] : {}),
               }}
               key={o.value}
