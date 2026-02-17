@@ -65,7 +65,7 @@ export default function SegmentedControl({
             <button
               style={{
                 ...style.budge,
-                ...(status == o.value ? STATUS_STYLE[o.value] : {}),
+                ...(status === o.value ? STATUS_STYLE[o.value] : {}),
               }}
               key={o.value}
               onClick={() => onChange(o.value)}
