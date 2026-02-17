@@ -1,12 +1,17 @@
+.main {
+  margin: clamp(16px, 4vw, 24px);
+}
+
 .container {
   display: grid;
+  margin-top: 12px;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 16px;
   justify-items: center;
   align-items: center;
 }
 
-.main {
+.bookDisplay {
   height: 100dvh;
 }
 
