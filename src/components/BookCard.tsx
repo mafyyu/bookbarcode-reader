@@ -1,3 +1,8 @@
+import Image from "next/image";
+import { motion } from "motion/react";
+
+const MotionImage = motion.create(Image);
+
 const styles = {
   card: {
     position: "relative",
@@ -47,11 +52,6 @@ type BookCardProps = {
   };
   onClick: () => void;
 };
-
-import { motion } from "motion/react";
-import Image from "next/image";
-
-const MotionImage = motion.create(Image);
 
 export default function BookCard({ book, onClick }: BookCardProps) {
   switch (book.isOwned) {

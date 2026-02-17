@@ -1,0 +1,23 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  border-radius: 50%;
+  border: 1px solid #e5e5e5;
+  width: 100px;
+  height: 100px;
+  background-color: #fff;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+  transition: transform 0.12s ease;
+}
+
+.button:active {
+  transform: scale(0.96);
+}
+
+.scanIcon {
+  width: 60%;
+  height: 60%;
+  display: block;
+}
