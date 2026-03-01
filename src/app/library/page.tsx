@@ -59,6 +59,13 @@ export default function Library() {
   return (
     <>
       <div className={styles.main}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>ライブラリ</h1>
+          <div className={styles.pcAction}>
+            <ScanButton variant="text" />
+          </div>
+        </header>
+
         <SegmentedControl
           status={filter}
           options={[
@@ -92,7 +99,7 @@ export default function Library() {
           </div>
         </main>
         <footer className={styles.footer}>
-          <ScanButton />
+          <ScanButton variant="fab" />
         </footer>
       </div>
     </>

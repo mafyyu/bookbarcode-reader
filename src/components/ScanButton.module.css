@@ -1,18 +1,36 @@
-.button {
+.fabButton {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px auto;
   border-radius: 50%;
   border: 1px solid #e5e5e5;
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   background-color: #fff;
-  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
   transition: transform 0.12s ease;
 }
 
-.button:active {
+.textButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: #000;
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.textButton:hover {
+  opacity: 0.8;
+}
+
+.textButton:active,
+.fabButton:active {
   transform: scale(0.96);
 }
 

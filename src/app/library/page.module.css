@@ -1,5 +1,23 @@
 .main {
   margin: clamp(16px, 4vw, 24px);
+  padding-bottom: 90px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.pcAction {
+  display: none;
 }
 
 .container {
@@ -12,7 +30,7 @@
 }
 
 .bookDisplay {
-  height: 100dvh;
+  min-height: 100dvh;
 }
 
 .footer {
@@ -20,4 +38,28 @@
   display: flex;
   position: fixed;
   bottom: 0;
+  left: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03);
+  align-items: center;
+  justify-content: center;
+  height: 90px;
+  z-index: 100;
+}
+
+@media (min-width: 768px) {
+  .pcAction {
+    display: block;
+  }
+
+  .footer {
+    display: none;
+  }
+
+  .main {
+    padding-bottom: 0px;
+  }
 }
