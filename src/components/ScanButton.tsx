@@ -20,7 +20,7 @@ export default function ScanButton({
       <Image
         className={styles.scanIcon}
         src="/barcode_scan.svg"
-        alt="scanButton"
+        alt="バーコードをスキャン"
         width={60}
         height={60}
       />
