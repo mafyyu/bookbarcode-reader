@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./ScanButton.module.css";
+import Link from "next/link";
 
 export default function ScanButton({
   variant = "fab",
@@ -8,14 +9,14 @@ export default function ScanButton({
 }) {
   if (variant === "text") {
     return (
-      <a href="/scan" className={styles.textButton}>
+      <Link href="/scan" className={styles.textButton}>
         ＋ 追加
-      </a>
+      </Link>
     );
   }
 
   return (
-    <a href="/scan" className={styles.fabButton}>
+    <Link href="/scan" className={styles.fabButton}>
       <Image
         className={styles.scanIcon}
         src="/barcode_scan.svg"
@@ -23,6 +24,6 @@ export default function ScanButton({
         width={60}
         height={60}
       />
-    </a>
+    </Link>
   );
 }
