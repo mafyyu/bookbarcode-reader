@@ -18,23 +18,41 @@ export async function POST(request: NextRequest) {
 
   const { isbn } = parsedBody.data;
 
-  const res = await fetch(`${process.env.RAKUTEN_API_BASE_URL}&isbn=${isbn}`);
-  if (!res.ok) {
+  const baseUrl = process.env.RAKUTEN_API_BASE_URL;
+  if (!baseUrl) {
     return NextResponse.json(
-      { error: "Failed to fetch data from Rakuten API" },
-      { status: 502 },
-    );
-  }
-  const data = await res.json();
-  const parsedResponse = BookResponseSchema.safeParse(data);
-
-  if (!parsedResponse.success) {
-    console.error("Failed to parse Rakuten API response", parsedResponse.error);
-    return NextResponse.json(
-      { error: "Invalid book API response" },
-      { status: 502 },
+      { error: "RAKUTEN_API_BASE_URL is not configured" },
+      { status: 500 },
     );
   }
 
-  return NextResponse.json(parsedResponse.data, { status: 200 });
+  try {
+    const res = await fetch(`${baseUrl}&isbn=${isbn}`);
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: "Failed to fetch data from Rakuten API" },
+        { status: 502 },
+      );
+    }
+    const data = await res.json();
+    const parsedResponse = BookResponseSchema.safeParse(data);
+
+    if (!parsedResponse.success) {
+      console.error(
+        "Failed to parse Rakuten API response",
+        parsedResponse.error,
+      );
+      return NextResponse.json(
+        { error: "Invalid book API response" },
+        { status: 502 },
+      );
+    }
+    return NextResponse.json(parsedResponse.data, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Unexpected error while fetching Rakuten API" },
+      { status: 502 },
+    );
+  }
 }
