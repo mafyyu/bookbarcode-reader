@@ -3,7 +3,6 @@ import ScanButton from "@/components/ScanButton";
 import BookCard from "@/components/BookCard";
 import { useEffect, useState } from "react";
 import BookDetail from "@/components/BookDetail";
-import { AnimatePresence } from "motion/react";
 import styles from "./page.module.css";
 import SegmentedControl from "@/components/SegmentedControl";
 import { FilterStatus } from "@/components/SegmentedControl";
@@ -59,6 +58,13 @@ export default function Library() {
   return (
     <>
       <div className={styles.main}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>ライブラリ</h1>
+          <div className={styles.pcAction}>
+            <ScanButton variant="text" />
+          </div>
+        </header>
+
         <SegmentedControl
           status={filter}
           options={[
@@ -69,14 +75,12 @@ export default function Library() {
           onChange={setFilterValue}
         />
         <main className={styles.bookDisplay}>
-          <AnimatePresence mode="wait">
-            {activeCard && (
-              <BookDetail
-                userBook={activeCard}
-                onClose={() => setActiveCard(null)}
-              ></BookDetail>
-            )}
-          </AnimatePresence>
+          {activeCard && (
+            <BookDetail
+              userBook={activeCard}
+              onClose={() => setActiveCard(null)}
+            ></BookDetail>
+          )}
           <div className={styles.container}>
             {visibleBook.map((userBook) => (
               <BookCard
@@ -92,7 +96,7 @@ export default function Library() {
           </div>
         </main>
         <footer className={styles.footer}>
-          <ScanButton />
+          <ScanButton variant="fab" />
         </footer>
       </div>
     </>

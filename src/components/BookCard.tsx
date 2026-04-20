@@ -1,7 +1,4 @@
 import Image from "next/image";
-import { motion } from "motion/react";
-
-const MotionImage = motion.create(Image);
 
 const styles = {
   card: {
@@ -59,8 +56,7 @@ export default function BookCard({ book, onClick }: BookCardProps) {
       return (
         <>
           <div style={styles.card} onClick={onClick}>
-            <MotionImage
-              layoutId={`bookcover-${book.isbn}`}
+            <Image
               style={styles.cover}
               src={book.imageUrl}
               alt="bookCover"
@@ -84,8 +80,7 @@ export default function BookCard({ book, onClick }: BookCardProps) {
       return (
         <>
           <div style={styles.card} onClick={onClick}>
-            <MotionImage
-              layoutId={`bookcover-${book.isbn}`}
+            <Image
               style={styles.cover}
               src={book.imageUrl}
               alt="bookCover"

@@ -1,11 +1,8 @@
 import { UserBook } from "@/app/library/page";
 import OwnedStatusBadge from "./OwnedStatusBadge";
-import { motion } from "motion/react";
 import Image from "next/image";
 import Divider from "./Divider";
 import CloseHeader from "./CloseHeader";
-
-const MotionImage = motion.create(Image);
 
 const styles = {
   header: {
@@ -74,14 +71,11 @@ export default function BookDetail({ userBook, onClose }: BookDetailProps) {
 
   return (
     <>
-      <header style={styles.header}>
-        <CloseHeader onClose={onClose} />
-      </header>
       <div style={styles.container}>
+        <CloseHeader onClose={onClose} />
         <div style={styles.imgContainer}>
           {book.image && (
-            <MotionImage
-              layoutId={`bookcover-${book.isbn}`}
+            <Image
               style={styles.cover}
               src={book.image}
               alt={`「${book.title}」の表紙`}

@@ -1,11 +1,7 @@
-import styles from "./page.module.css";
-import Divider from "@/components/Divider";
+"use client";
+
 import { SignUp } from "@clerk/nextjs";
 
-export default function Home() {
-  return (
-    <div>
-      <SignUp fallbackRedirectUrl={"/library"}></SignUp>
-    </div>
-  );
+export default function LoginPage() {
+  return <SignUp routing="hash" fallbackRedirectUrl="/library" />;
 }
