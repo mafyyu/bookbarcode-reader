@@ -18,7 +18,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     backgroundColor: "white",
-    // overflowY: "hidden",
+    overflowY: "auto",
     flex: "1",
   },
   imgContainer: {
@@ -71,9 +71,6 @@ export default function BookDetail({ userBook, onClose }: BookDetailProps) {
 
   return (
     <>
-      {/* <header style={styles.header}>
-
-      </header> */}
       <div style={styles.container}>
         <CloseHeader onClose={onClose} />
         <div style={styles.imgContainer}>
