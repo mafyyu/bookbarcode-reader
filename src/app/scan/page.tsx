@@ -21,6 +21,12 @@ import { updateOwnStatus } from "@/lib/updateOwnStatus";
 
 type Book = z.infer<typeof BookSchema>;
 type LibraryStatus = "not_in_library" | "in_library" | "owned";
+type FetchState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; books: Book[]; libraryStatus: LibraryStatus }
+  | { status: "notFound" }
+  | { status: "error"; reason: "bookFetch" | "statusFetch" | "network" };
 
 export default function Scan() {
   const router = useRouter();
@@ -33,31 +39,58 @@ export default function Scan() {
   const [result, setResult] = useState<Book[] | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [status, setStatus] = useState<LibraryStatus>("not_in_library");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [fetchState, setFetchState] = useState<FetchState>({
+    status: "idle",
+  });
 
   // 情報の取得
   const fetchBook = useCallback(async (isbn: string) => {
-    setLoading(true);
+    setFetchState({ status: "loading" });
     try {
       const res = await fetch("/api/books", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isbn }),
       });
+
+      if (!res.ok) {
+        setFetchState({ status: "error", reason: "bookFetch" });
+        return;
+      }
+
       const data = await res.json();
+      if (!Array.isArray(data)) {
+        setFetchState({ status: "error", reason: "bookFetch" });
+        return;
+      }
+
       setResult(data);
+
+      if (data.length === 0) {
+        setFetchState({ status: "notFound" });
+        return;
+      }
 
       if (data && data.length > 0) {
         const userBooksRes = await fetch(
           `/api/user-books/status?isbn=${data[0].isbn}`,
         );
+        if (!userBooksRes.ok) {
+          setFetchState({ status: "error", reason: "statusFetch" });
+          return;
+        }
+
         const resData = await userBooksRes.json();
         setStatus(resData.status);
+        setFetchState({
+          status: "success",
+          books: data,
+          libraryStatus: resData.status,
+        });
       }
     } catch (error) {
       console.log("fetchbook error", error);
-    } finally {
-      setLoading(false);
+      setFetchState({ status: "error", reason: "network" });
     }
   }, []);
 
@@ -197,7 +230,7 @@ export default function Scan() {
             </div>
           </div>
         )}
-        {!isScanning && result && !loading && (
+        {!isScanning && result && fetchState.status === "success" && (
           <div className={styles.mainContainer}>
             <Divider text="スキャン結果"></Divider>
             <BookPreview book={result}></BookPreview>
