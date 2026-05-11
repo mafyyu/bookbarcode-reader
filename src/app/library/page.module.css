@@ -7,17 +7,27 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  position: relative;
+  min-height: 45px;
+  margin-bottom: 8px;
 }
 
-.title {
-  margin: 0;
-  font-size: 24px;
-  font-weight: bold;
+.logo {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.userAction {
+  position: relative;
+  margin-top: 32px;
+  margin-left: 24px;
 }
 
 .pcAction {
   display: none;
+  margin-top: 32px;
 }
 
 .container {
@@ -54,12 +64,14 @@
   .pcAction {
     display: block;
   }
-
   .footer {
     display: none;
   }
-
   .main {
     padding-bottom: 0px;
+  }
+  .container{
+    margin-left: 16px;
+    margin-right: 16px;
   }
 }
