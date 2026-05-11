@@ -72,6 +72,7 @@ export default function Scan() {
       const data = await res.json();
       if (!Array.isArray(data)) {
         setFetchState({ status: "error", reason: "bookFetch" });
+        handleScanError("本の情報を取得できませんでした。");
         return;
       }
 
@@ -247,7 +248,7 @@ export default function Scan() {
             </div>
           </div>
         )}
-        {fetchState.status == "loading" && <LoadingCircle />}
+        {fetchState.status === "loading" && <LoadingCircle />}
         {!isScanning && result && fetchState.status === "success" && (
           <div className={styles.mainContainer}>
             <Divider text="スキャン結果"></Divider>
