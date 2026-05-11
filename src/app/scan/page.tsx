@@ -18,9 +18,17 @@ import { BookSchema } from "@/lib/schema/book";
 import { addBook } from "@/lib/addBook";
 import { addUserBook } from "@/lib/addUserBook";
 import { updateOwnStatus } from "@/lib/updateOwnStatus";
+import { toast } from "react-hot-toast";
+import { LoadingCircle } from "@/components/LoadingCircle";
 
 type Book = z.infer<typeof BookSchema>;
 type LibraryStatus = "not_in_library" | "in_library" | "owned";
+type FetchState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; books: Book[]; libraryStatus: LibraryStatus }
+  | { status: "notFound" }
+  | { status: "error"; reason: "bookFetch" | "statusFetch" | "network" };
 
 export default function Scan() {
   const router = useRouter();
@@ -33,31 +41,70 @@ export default function Scan() {
   const [result, setResult] = useState<Book[] | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [status, setStatus] = useState<LibraryStatus>("not_in_library");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [fetchState, setFetchState] = useState<FetchState>({
+    status: "idle",
+  });
+
+  // エラーからtoastを出して元の画面に戻す共通関数
+  const handleScanError = (message: string) => {
+    toast.error(message, { duration: 5000 });
+    setIsScanning(true);
+    setFetchState({ status: "idle" });
+  };
 
   // 情報の取得
   const fetchBook = useCallback(async (isbn: string) => {
-    setLoading(true);
+    setFetchState({ status: "loading" });
     try {
       const res = await fetch("/api/books", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isbn }),
       });
+
+      if (!res.ok) {
+        setFetchState({ status: "error", reason: "bookFetch" });
+        handleScanError("本の情報を取得できませんでした。");
+        return;
+      }
+
       const data = await res.json();
+      if (!Array.isArray(data)) {
+        setFetchState({ status: "error", reason: "bookFetch" });
+        handleScanError("本の情報を取得できませんでした。");
+        return;
+      }
+
       setResult(data);
+
+      if (data.length === 0) {
+        setFetchState({ status: "notFound" });
+        handleScanError("該当する書籍が見つかりませんでした。");
+        return;
+      }
 
       if (data && data.length > 0) {
         const userBooksRes = await fetch(
           `/api/user-books/status?isbn=${data[0].isbn}`,
         );
+        if (!userBooksRes.ok) {
+          setFetchState({ status: "error", reason: "statusFetch" });
+          handleScanError("ライブラリ状態を取得できませんでした。");
+          return;
+        }
+
         const resData = await userBooksRes.json();
         setStatus(resData.status);
+        setFetchState({
+          status: "success",
+          books: data,
+          libraryStatus: resData.status,
+        });
       }
     } catch (error) {
       console.log("fetchbook error", error);
-    } finally {
-      setLoading(false);
+      setFetchState({ status: "error", reason: "network" });
+      handleScanError("通信に失敗しました。");
     }
   }, []);
 
@@ -94,9 +141,9 @@ export default function Scan() {
           const text = result.getText();
           if (text.startsWith("978") || text.startsWith("979")) {
             setIsbn(text);
-            fetchBook(text);
             controls.stop();
             setIsScanning(false);
+            fetchBook(text);
           } else return;
         }
         if (error && !(error instanceof NotFoundException)) {
@@ -119,9 +166,10 @@ export default function Scan() {
     try {
       await addBook(result[0]);
       await addUserBook(result[0], isOwned);
+      toast.success("ライブラリに追加しました。");
       router.push("/library");
     } catch (error) {
-      console.log(error);
+      toast.error("ライブラリへの追加に失敗しました。");
     } finally {
       setIsSaving(false);
     }
@@ -134,9 +182,11 @@ export default function Scan() {
     }
     try {
       await updateOwnStatus(result[0], true);
+      toast.success("購入済みに変更しました。");
       router.push("/library");
     } catch (error) {
       console.error("Failed to update book status:", error);
+      toast.error("ステータスの変更に失敗しました。");
     }
   };
 
@@ -197,7 +247,8 @@ export default function Scan() {
             </div>
           </div>
         )}
-        {!isScanning && result && !loading && (
+        {fetchState.status === "loading" && <LoadingCircle />}
+        {!isScanning && result && fetchState.status === "success" && (
           <div className={styles.mainContainer}>
             <Divider text="スキャン結果"></Divider>
             <BookPreview book={result}></BookPreview>
