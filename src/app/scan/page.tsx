@@ -166,9 +166,10 @@ export default function Scan() {
     try {
       await addBook(result[0]);
       await addUserBook(result[0], isOwned);
+      toast.success("ライブラリに追加しました。");
       router.push("/library");
     } catch (error) {
-      console.log(error);
+      toast.error("ライブラリへの追加に失敗しました。");
     } finally {
       setIsSaving(false);
     }
@@ -181,9 +182,11 @@ export default function Scan() {
     }
     try {
       await updateOwnStatus(result[0], true);
+      toast.success("購入済みに変更しました。");
       router.push("/library");
     } catch (error) {
       console.error("Failed to update book status:", error);
+      toast.success("ステータスの変更に失敗しました。");
     }
   };
 
