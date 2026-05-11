@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import ScanButton from "@/components/ScanButton";
 import BookCard from "@/components/BookCard";
 import { useEffect, useState } from "react";
@@ -6,6 +7,7 @@ import BookDetail from "@/components/BookDetail";
 import styles from "./page.module.css";
 import SegmentedControl from "@/components/SegmentedControl";
 import { FilterStatus } from "@/components/SegmentedControl";
+import { UserIconButton } from "@/components/UserIconButton";
 
 export type UserBook = {
   isOwned: "in_library" | "owned";
@@ -59,6 +61,17 @@ export default function Library() {
     <>
       <div className={styles.main}>
         <header className={styles.header}>
+          <div className={styles.userAction}>
+            <UserIconButton />
+          </div>
+          <Image
+            className={styles.logo}
+            src="/aruka_logo.svg"
+            alt="aruka"
+            width={190}
+            height={45}
+            priority
+          />
           <div className={styles.pcAction}>
             <ScanButton variant="text" />
           </div>
