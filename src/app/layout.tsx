@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "react-hot-toast";
 import {
   ClerkProvider,
   SignInButton,
@@ -33,6 +34,7 @@ export default function RootLayout({
         <body className={`${notoSans.className}`}>
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <UserButton />
+            <Toaster />
             {/* <SignedOut>
               <SignInButton />
               <SignUpButton>

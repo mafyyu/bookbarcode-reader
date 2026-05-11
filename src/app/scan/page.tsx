@@ -18,6 +18,7 @@ import { BookSchema } from "@/lib/schema/book";
 import { addBook } from "@/lib/addBook";
 import { addUserBook } from "@/lib/addUserBook";
 import { updateOwnStatus } from "@/lib/updateOwnStatus";
+import { toast } from "react-hot-toast";
 
 type Book = z.infer<typeof BookSchema>;
 type LibraryStatus = "not_in_library" | "in_library" | "owned";
@@ -43,6 +44,14 @@ export default function Scan() {
     status: "idle",
   });
 
+  // エラーからtoastを出して元の画面に戻す共通関数
+  const handleScanError = (message: string) => {
+    toast.error(message, { duration: 5000 });
+    console.log("message", message);
+    setIsScanning(true);
+    setFetchState({ status: "idle" });
+  };
+
   // 情報の取得
   const fetchBook = useCallback(async (isbn: string) => {
     setFetchState({ status: "loading" });
@@ -55,6 +64,7 @@ export default function Scan() {
 
       if (!res.ok) {
         setFetchState({ status: "error", reason: "bookFetch" });
+        handleScanError("本の情報を取得できませんでした。");
         return;
       }
 
