@@ -48,7 +48,6 @@ export default function Scan() {
   // エラーからtoastを出して元の画面に戻す共通関数
   const handleScanError = (message: string) => {
     toast.error(message, { duration: 5000 });
-    console.log("message", message);
     setIsScanning(true);
     setFetchState({ status: "idle" });
   };
@@ -142,9 +141,9 @@ export default function Scan() {
           const text = result.getText();
           if (text.startsWith("978") || text.startsWith("979")) {
             setIsbn(text);
-            fetchBook(text);
             controls.stop();
             setIsScanning(false);
+            fetchBook(text);
           } else return;
         }
         if (error && !(error instanceof NotFoundException)) {
@@ -187,7 +186,7 @@ export default function Scan() {
       router.push("/library");
     } catch (error) {
       console.error("Failed to update book status:", error);
-      toast.success("ステータスの変更に失敗しました。");
+      toast.error("ステータスの変更に失敗しました。");
     }
   };
 
