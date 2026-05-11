@@ -19,6 +19,7 @@ import { addBook } from "@/lib/addBook";
 import { addUserBook } from "@/lib/addUserBook";
 import { updateOwnStatus } from "@/lib/updateOwnStatus";
 import { toast } from "react-hot-toast";
+import { LoadingCircle } from "@/components/LoadingCircle";
 
 type Book = z.infer<typeof BookSchema>;
 type LibraryStatus = "not_in_library" | "in_library" | "owned";
@@ -240,6 +241,7 @@ export default function Scan() {
             </div>
           </div>
         )}
+        {fetchState.status == "loading" && <LoadingCircle />}
         {!isScanning && result && fetchState.status === "success" && (
           <div className={styles.mainContainer}>
             <Divider text="スキャン結果"></Divider>
