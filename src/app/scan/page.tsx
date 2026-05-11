@@ -79,6 +79,7 @@ export default function Scan() {
 
       if (data.length === 0) {
         setFetchState({ status: "notFound" });
+        handleScanError("該当する書籍が見つかりませんでした。");
         return;
       }
 
@@ -88,6 +89,7 @@ export default function Scan() {
         );
         if (!userBooksRes.ok) {
           setFetchState({ status: "error", reason: "statusFetch" });
+          handleScanError("ライブラリ状態を取得できませんでした。");
           return;
         }
 
@@ -102,6 +104,7 @@ export default function Scan() {
     } catch (error) {
       console.log("fetchbook error", error);
       setFetchState({ status: "error", reason: "network" });
+      handleScanError("通信に失敗しました。");
     }
   }, []);
 
