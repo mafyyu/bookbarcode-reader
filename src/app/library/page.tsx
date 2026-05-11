@@ -59,7 +59,6 @@ export default function Library() {
     <>
       <div className={styles.main}>
         <header className={styles.header}>
-          <h1 className={styles.title}>ライブラリ</h1>
           <div className={styles.pcAction}>
             <ScanButton variant="text" />
           </div>

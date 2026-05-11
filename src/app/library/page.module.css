@@ -5,15 +5,9 @@
 
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 24px;
-}
-
-.title {
-  margin: 0;
-  font-size: 24px;
-  font-weight: bold;
 }
 
 .pcAction {
