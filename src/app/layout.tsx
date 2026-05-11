@@ -1,15 +1,8 @@
 import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
 import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const notoSans = Noto_Sans_JP({
   subsets: ["latin"],
@@ -32,31 +25,8 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="ja">
         <body className={`${notoSans.className}`}>
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <div style={{ marginLeft: "24px", marginTop: "24px" }}>
-              <UserButton
-                appearance={{
-                  elements: {
-                    userButtonTrigger: {
-                      backgroundColor: "transparent",
-                      boxShadow: "none",
-                      "&:focus": {
-                        boxShadow: "none",
-                      },
-                      "&:hover": {
-                        backgroundColor: "transparent",
-                      },
-                    },
-                    userButtonAvatarBox: {
-                      backgroundColor: "transparent",
-                    },
-                    userButtonAvatarImage: {
-                      content: "url('./person.svg')",
-                    },
-                  },
-                }}
-              />
-            </div>
+          <header className="flex justify-start items-center p-4 gap-4 h-16">
+            <div style={{ marginLeft: "24px", marginTop: "12px" }}></div>
             <Toaster />
           </header>
           {children}
