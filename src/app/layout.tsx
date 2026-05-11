@@ -33,19 +33,31 @@ export default function RootLayout({
       <html lang="ja">
         <body className={`${notoSans.className}`}>
           <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <UserButton />
+            <div style={{ marginLeft: "24px", marginTop: "24px" }}>
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonTrigger: {
+                      backgroundColor: "transparent",
+                      boxShadow: "none",
+                      "&:focus": {
+                        boxShadow: "none",
+                      },
+                      "&:hover": {
+                        backgroundColor: "transparent",
+                      },
+                    },
+                    userButtonAvatarBox: {
+                      backgroundColor: "transparent",
+                    },
+                    userButtonAvatarImage: {
+                      content: "url('./person.svg')",
+                    },
+                  },
+                }}
+              />
+            </div>
             <Toaster />
-            {/* <SignedOut>
-              <SignInButton />
-              <SignUpButton>
-                <button className="bg-[#6c47ff] text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-                  Sign Up
-                </button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn> */}
           </header>
           {children}
         </body>
