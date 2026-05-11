@@ -52,19 +52,5 @@ API から返ってきたエラーメッセージをそのまま UI に出さず
 
 - `bookFetch`: `/api/books` の取得に失敗した。
 - `statusFetch`: `/api/user-books/status` の取得に失敗した。
-- `network`: ネットワークエラーなどで `fetch` 自体が失敗した。
+- `network`: ネットワークエラーなどで `fetch` 自体が失敗した
 
-## メッセージ方針
-
-API のエラー文字列は、デバッグやログ用途として扱います。
-UI にはそのまま表示せず、`reason` ごとに固定メッセージを出します。
-
-例:
-
-```ts
-const errorMessages = {
-  bookFetch: "本の情報を取得できませんでした",
-  statusFetch: "ライブラリ状態を取得できませんでした",
-  network: "通信に失敗しました",
-} as const;
-```
