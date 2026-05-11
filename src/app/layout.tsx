@@ -26,7 +26,6 @@ export default function RootLayout({
       <html lang="ja">
         <body className={`${notoSans.className}`}>
           <header className="flex justify-start items-center p-4 gap-4 h-16">
-            <div style={{ marginLeft: "24px", marginTop: "12px" }}></div>
             <Toaster />
           </header>
           {children}
