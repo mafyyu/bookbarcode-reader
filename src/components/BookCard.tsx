@@ -47,15 +47,14 @@ type BookCardProps = {
     imageUrl: string | null;
     isOwned: "owned" | "in_library";
   };
-  onClick: () => void;
 };
 
-export default function BookCard({ book, onClick }: BookCardProps) {
+export default function BookCard({ book }: BookCardProps) {
   switch (book.isOwned) {
     case "owned":
       return (
         <>
-          <div style={styles.card} onClick={onClick}>
+          <div style={styles.card}>
             {book.imageUrl && (
               <Image
                 style={styles.cover}
@@ -81,7 +80,7 @@ export default function BookCard({ book, onClick }: BookCardProps) {
     case "in_library":
       return (
         <>
-          <div style={styles.card} onClick={onClick}>
+          <div style={styles.card}>
             {book.imageUrl && (
               <Image
                 style={styles.cover}
