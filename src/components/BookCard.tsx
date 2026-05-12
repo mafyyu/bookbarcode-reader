@@ -44,7 +44,7 @@ const styles = {
 type BookCardProps = {
   book: {
     isbn: string;
-    imageUrl: string;
+    imageUrl: string | null;
     isOwned: "owned" | "in_library";
   };
   onClick: () => void;
@@ -56,14 +56,16 @@ export default function BookCard({ book, onClick }: BookCardProps) {
       return (
         <>
           <div style={styles.card} onClick={onClick}>
-            <Image
-              style={styles.cover}
-              src={book.imageUrl}
-              alt="bookCover"
-              width={120}
-              height={180}
-              sizes="120px"
-            />
+            {book.imageUrl && (
+              <Image
+                style={styles.cover}
+                src={book.imageUrl}
+                alt="bookCover"
+                width={120}
+                height={180}
+                sizes="120px"
+              />
+            )}
             <div style={styles.ownedBadge}>
               <Image
                 style={styles.badgeIcon}
@@ -80,14 +82,16 @@ export default function BookCard({ book, onClick }: BookCardProps) {
       return (
         <>
           <div style={styles.card} onClick={onClick}>
-            <Image
-              style={styles.cover}
-              src={book.imageUrl}
-              alt="bookCover"
-              width={120}
-              height={180}
-              sizes="120px"
-            />
+            {book.imageUrl && (
+              <Image
+                style={styles.cover}
+                src={book.imageUrl}
+                alt="bookCover"
+                width={120}
+                height={180}
+                sizes="120px"
+              />
+            )}
             <div style={styles.wantedBadge}>
               <Image
                 style={styles.badgeIcon}

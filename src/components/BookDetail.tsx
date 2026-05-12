@@ -1,8 +1,7 @@
-import { UserBook } from "@/app/library/page";
+import type { UserBook } from "@/lib/schema/book";
 import OwnedStatusBadge from "./OwnedStatusBadge";
 import Image from "next/image";
 import Divider from "./Divider";
-import CloseHeader from "./CloseHeader";
 
 const styles = {
   header: {
@@ -63,16 +62,14 @@ const styles = {
 
 type BookDetailProps = {
   userBook: UserBook;
-  onClose: () => void;
 };
 
-export default function BookDetail({ userBook, onClose }: BookDetailProps) {
+export default function BookDetail({ userBook }: BookDetailProps) {
   const { book, isOwned } = userBook;
 
   return (
     <>
       <div style={styles.container}>
-        <CloseHeader onClose={onClose} />
         <div style={styles.imgContainer}>
           {book.image && (
             <Image

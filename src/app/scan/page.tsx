@@ -199,11 +199,7 @@ export default function Scan() {
   return (
     <>
       <header className={styles.header}>
-        <CloseHeader
-          onClose={() => {
-            router.push("/library");
-          }}
-        />
+        <CloseHeader href="/library" />
       </header>
       <main>
         {isScanning && (

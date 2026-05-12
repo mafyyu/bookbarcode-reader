@@ -1,31 +1,17 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import ScanButton from "@/components/ScanButton";
 import BookCard from "@/components/BookCard";
 import { useEffect, useState } from "react";
-import BookDetail from "@/components/BookDetail";
 import styles from "./page.module.css";
 import SegmentedControl from "@/components/SegmentedControl";
 import { FilterStatus } from "@/components/SegmentedControl";
 import { UserIconButton } from "@/components/UserIconButton";
-
-export type UserBook = {
-  isOwned: "in_library" | "owned";
-  book: {
-    isbn: string;
-    title: string;
-    titleKana: string;
-    author: string;
-    publisherName: string;
-    image: string;
-    caption: string;
-    salesDate: string;
-  };
-};
+import type { UserBook } from "@/lib/schema/book";
 
 export default function Library() {
   const [books, setBooks] = useState<UserBook[]>([]);
-  const [activeCard, setActiveCard] = useState<UserBook | null>(null);
   const [filter, setFilter] = useState<FilterStatus>("all");
 
   // statusを変えるための関数
@@ -87,23 +73,21 @@ export default function Library() {
           onChange={setFilterValue}
         />
         <main className={styles.bookDisplay}>
-          {activeCard && (
-            <BookDetail
-              userBook={activeCard}
-              onClose={() => setActiveCard(null)}
-            ></BookDetail>
-          )}
           <div className={styles.container}>
             {visibleBook.map((userBook) => (
-              <BookCard
+              <Link
+                href={`/library/books/${userBook.book.isbn}`}
                 key={userBook.book.isbn}
-                book={{
-                  isbn: userBook.book.isbn,
-                  imageUrl: userBook.book.image,
-                  isOwned: userBook.isOwned,
-                }}
-                onClick={() => setActiveCard(userBook)}
-              />
+              >
+                <BookCard
+                  book={{
+                    isbn: userBook.book.isbn,
+                    imageUrl: userBook.book.image,
+                    isOwned: userBook.isOwned,
+                  }}
+                  onClick={() => {}}
+                />
+              </Link>
             ))}
           </div>
         </main>
