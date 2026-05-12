@@ -1,15 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import { IsbnSchema } from "@/lib/schema/book";
-import { BookSchema } from "@/lib/schema/book";
+import { IsbnSchema, UserBookResponseSchema } from "@/lib/schema/book";
 import { supabase } from "@/lib/supabase";
 import z from "zod";
-
-type Book = z.infer<typeof BookSchema>;
-
-type UserBook = Book & {
-  isOwned: boolean;
-};
 
 // ユーザが登録した本を全て取得するAPI
 export async function GET() {
@@ -53,7 +46,16 @@ export async function GET() {
         book: row.books,
       }));
 
-    return NextResponse.json(result);
+    const parsedResult = UserBookResponseSchema.safeParse(result);
+    if (!parsedResult.success) {
+      console.error(parsedResult.error);
+      return NextResponse.json(
+        { error: "Invalid user books data" },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json(parsedResult.data);
   } catch (error) {
     console.log(error);
     return NextResponse.json(

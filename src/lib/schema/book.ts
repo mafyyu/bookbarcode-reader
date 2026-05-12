@@ -51,3 +51,13 @@ export const BookResponseSchema = z
 export const bodySchema = z.object({
   isbn: IsbnSchema,
 });
+
+export const UserBookSchema = z.object({
+  isOwned: z.enum(["in_library", "owned"]),
+  book: BookSchema,
+});
+
+export const UserBookResponseSchema = z.array(UserBookSchema);
+
+export type Book = z.infer<typeof BookSchema>;
+export type UserBook = z.infer<typeof UserBookSchema>;
