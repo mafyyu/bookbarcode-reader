@@ -11,6 +11,7 @@ export default async function BookDetails({
   const cookieStore = await cookies();
   const { isbn } = await params;
   let userData: UserBook | null = null;
+  let errorMessage: string | null = null;
 
   try {
     const res = await fetch(
@@ -21,14 +22,20 @@ export default async function BookDetails({
         },
       },
     );
-    userData = await res.json();
+    if (!res.ok) {
+      errorMessage = `API Error: ${res.status}`;
+    } else {
+      userData = await res.json();
+    }
   } catch (e) {
+    errorMessage = "本の詳細情報の取得に失敗しました";
     console.log(e);
   }
 
   return (
     <div>
       <CloseHeader href="/library" />
+      <p>{errorMessage}</p>
       {userData && <BookDetail userBook={userData}></BookDetail>}
     </div>
   );
