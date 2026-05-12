@@ -141,6 +141,7 @@ export default function Scan() {
         }
         if (mountedRef.current === false) {
           controls.stop();
+          return;
         }
         if (result) {
           const text = result.getText();
@@ -153,7 +154,6 @@ export default function Scan() {
         }
         if (error && !(error instanceof NotFoundException)) {
           console.log("error", error);
-          controls.stop();
         }
       },
     );
