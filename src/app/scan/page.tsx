@@ -108,9 +108,11 @@ export default function Scan() {
     }
   }, []);
 
+  const mountedRef = useRef(true);
   // カメラ操作
   useEffect(() => {
     if (!videoRef.current) return;
+    mountedRef.current = true;
     let stream: MediaStream | null = null;
 
     const constraints: MediaStreamConstraints = {
@@ -137,6 +139,10 @@ export default function Scan() {
         if (!stream && videoRef.current?.srcObject instanceof MediaStream) {
           stream = videoRef.current.srcObject;
         }
+        if (mountedRef.current === false) {
+          controls.stop();
+          return;
+        }
         if (result) {
           const text = result.getText();
           if (text.startsWith("978") || text.startsWith("979")) {
@@ -152,7 +158,7 @@ export default function Scan() {
       },
     );
     return () => {
-      stream?.getTracks().forEach((track) => track.stop());
+      mountedRef.current = false;
     };
   }, [isScanning, fetchBook]);
 
@@ -168,7 +174,7 @@ export default function Scan() {
       await addUserBook(result[0], isOwned);
       toast.success("ライブラリに追加しました。");
       router.push("/library");
-    } catch (error) {
+    } catch {
       toast.error("ライブラリへの追加に失敗しました。");
     } finally {
       setIsSaving(false);
