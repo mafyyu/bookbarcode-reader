@@ -13,11 +13,14 @@ export default async function BookDetails({
   let userData: UserBook | null = null;
 
   try {
-    const res = await fetch(`http://localhost:3000/api/user-books/${isbn}`, {
-      headers: {
-        Cookie: cookieStore.toString(),
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/user-books/${isbn}`,
+      {
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
       },
-    });
+    );
     userData = await res.json();
   } catch (e) {
     console.log(e);
