@@ -20,6 +20,7 @@ export default async function BookDetails({
         headers: {
           Cookie: cookieStore.toString(),
         },
+        cache: "no-store",
       },
     );
     if (!res.ok) {
