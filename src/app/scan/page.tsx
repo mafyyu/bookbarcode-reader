@@ -110,8 +110,11 @@ export default function Scan() {
 
   // カメラ操作
   useEffect(() => {
-    if (!videoRef.current) return;
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
     let stream: MediaStream | null = null;
+    let cleanupRequested = false;
+    let controlsStopped = false;
 
     const constraints: MediaStreamConstraints = {
       audio: false,
@@ -130,18 +133,26 @@ export default function Scan() {
     const codeReader = new BrowserMultiFormatOneDReader(hints);
     readerRef.current = codeReader;
 
-    codeReader.decodeFromConstraints(
+    const stopControls = (
+      controls: Awaited<ReturnType<typeof codeReader.decodeFromConstraints>>,
+    ) => {
+      if (controlsStopped) return;
+      controlsStopped = true;
+      controls.stop();
+    };
+
+    const controlsPromise = codeReader.decodeFromConstraints(
       constraints,
-      videoRef.current,
+      videoElement,
       (result, error, controls) => {
-        if (!stream && videoRef.current?.srcObject instanceof MediaStream) {
-          stream = videoRef.current.srcObject;
+        if (!stream && videoElement.srcObject instanceof MediaStream) {
+          stream = videoElement.srcObject;
         }
         if (result) {
           const text = result.getText();
           if (text.startsWith("978") || text.startsWith("979")) {
             setIsbn(text);
-            controls.stop();
+            stopControls(controls);
             setIsScanning(false);
             fetchBook(text);
           } else return;
@@ -151,8 +162,28 @@ export default function Scan() {
         }
       },
     );
+
+    controlsPromise
+      .then((controls) => {
+        if (cleanupRequested) {
+          stopControls(controls);
+        }
+      })
+      .catch((error) => {
+        console.log("camera start error", error);
+      });
+
     return () => {
-      stream?.getTracks().forEach((track) => track.stop());
+      cleanupRequested = true;
+      controlsPromise.then(stopControls).catch(() => {});
+
+      const currentStream =
+        stream ??
+        (videoElement.srcObject instanceof MediaStream
+          ? videoElement.srcObject
+          : null);
+      currentStream?.getTracks().forEach((track) => track.stop());
+      videoElement.srcObject = null;
     };
   }, [isScanning, fetchBook]);
 
