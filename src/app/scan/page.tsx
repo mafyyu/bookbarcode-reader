@@ -278,6 +278,11 @@ export default function Scan() {
             >
               もう一度スキャン
             </button>
+            <div className={styles.credit}>
+              <a href="https://developers.rakuten.com/" target="_blank">
+                Supported by Rakuten Developers
+              </a>
+            </div>
           </div>
         )}
       </main>
