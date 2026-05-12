@@ -6,14 +6,14 @@ import { IsbnSchema, UserBookSchema } from "@/lib/schema/book";
 // isbnを受け取ってuser-booksに含まれる場合、その書籍データを返すAPI
 export async function GET(
   _request: NextRequest,
-  { params }: { params: Promise<{ isbn: string }> },
+  { params }: { params: { isbn: string } },
 ) {
   const { userId } = await auth();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { isbn } = await params;
+  const { isbn } = params;
   const parsedIsbn = IsbnSchema.safeParse(isbn);
   if (!parsedIsbn.success) {
     return NextResponse.json({ error: "Invalid ISBN data" }, { status: 400 });
