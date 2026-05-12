@@ -85,7 +85,6 @@ export default function Library() {
                     imageUrl: userBook.book.image,
                     isOwned: userBook.isOwned,
                   }}
-                  onClick={() => {}}
                 />
               </Link>
             ))}
