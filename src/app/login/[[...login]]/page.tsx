@@ -5,10 +5,8 @@ import styles from "./page.module.css";
 export default function LoginPage() {
   console.log(styles);
   return (
-    <body>
-      <div className={styles.container}>
-        <SignUp routing="hash" fallbackRedirectUrl="/library" />
-      </div>
-    </body>
+    <div className={styles.container}>
+      <SignUp routing="hash" fallbackRedirectUrl="/library" />
+    </div>
   );
 }
