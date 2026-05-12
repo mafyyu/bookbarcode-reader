@@ -108,13 +108,12 @@ export default function Scan() {
     }
   }, []);
 
+  const mountedRef = useRef(true);
   // カメラ操作
   useEffect(() => {
-    const videoElement = videoRef.current;
-    if (!videoElement) return;
+    if (!videoRef.current) return;
+    mountedRef.current = true;
     let stream: MediaStream | null = null;
-    let cleanupRequested = false;
-    let controlsStopped = false;
 
     const constraints: MediaStreamConstraints = {
       audio: false,
@@ -133,57 +132,33 @@ export default function Scan() {
     const codeReader = new BrowserMultiFormatOneDReader(hints);
     readerRef.current = codeReader;
 
-    const stopControls = (
-      controls: Awaited<ReturnType<typeof codeReader.decodeFromConstraints>>,
-    ) => {
-      if (controlsStopped) return;
-      controlsStopped = true;
-      controls.stop();
-    };
-
-    const controlsPromise = codeReader.decodeFromConstraints(
+    codeReader.decodeFromConstraints(
       constraints,
-      videoElement,
+      videoRef.current,
       (result, error, controls) => {
-        if (!stream && videoElement.srcObject instanceof MediaStream) {
-          stream = videoElement.srcObject;
+        if (!stream && videoRef.current?.srcObject instanceof MediaStream) {
+          stream = videoRef.current.srcObject;
+        }
+        if (mountedRef.current === false) {
+          controls.stop();
         }
         if (result) {
           const text = result.getText();
           if (text.startsWith("978") || text.startsWith("979")) {
             setIsbn(text);
-            stopControls(controls);
+            controls.stop();
             setIsScanning(false);
             fetchBook(text);
           } else return;
         }
         if (error && !(error instanceof NotFoundException)) {
           console.log("error", error);
+          controls.stop();
         }
       },
     );
-
-    controlsPromise
-      .then((controls) => {
-        if (cleanupRequested) {
-          stopControls(controls);
-        }
-      })
-      .catch((error) => {
-        console.log("camera start error", error);
-      });
-
     return () => {
-      cleanupRequested = true;
-      controlsPromise.then(stopControls).catch(() => {});
-
-      const currentStream =
-        stream ??
-        (videoElement.srcObject instanceof MediaStream
-          ? videoElement.srcObject
-          : null);
-      currentStream?.getTracks().forEach((track) => track.stop());
-      videoElement.srcObject = null;
+      mountedRef.current = false;
     };
   }, [isScanning, fetchBook]);
 
@@ -199,7 +174,7 @@ export default function Scan() {
       await addUserBook(result[0], isOwned);
       toast.success("ライブラリに追加しました。");
       router.push("/library");
-    } catch (error) {
+    } catch {
       toast.error("ライブラリへの追加に失敗しました。");
     } finally {
       setIsSaving(false);
