@@ -1,5 +1,4 @@
 import { createSupabaseClient } from "@/lib/supabase";
-import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { IsbnSchema, UserBookSchema } from "@/lib/schema/book";
 
@@ -8,8 +7,7 @@ export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ isbn: string }> },
 ) {
-  const supabase = await createSupabaseClient();
-  const { userId } = await auth();
+  const { supabase, userId } = await createSupabaseClient();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
