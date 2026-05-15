@@ -1,12 +1,11 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { IsbnSchema, UserBookResponseSchema } from "@/lib/schema/book";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseClient } from "@/lib/supabase";
 import z from "zod";
 
 // ユーザが登録した本を全て取得するAPI
 export async function GET() {
-  const { userId } = await auth();
+  const { supabase, userId } = await createSupabaseClient();
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -72,7 +71,7 @@ const bodySchema = z.object({
 
 // user_booksに登録するAPI
 export async function POST(request: NextRequest) {
-  const { userId } = await auth();
+  const { supabase, userId } = await createSupabaseClient();
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -105,7 +104,7 @@ export async function POST(request: NextRequest) {
 
 // 購入済みを変更するAPI
 export async function PATCH(request: NextRequest) {
-  const { userId } = await auth();
+  const { supabase, userId } = await createSupabaseClient();
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

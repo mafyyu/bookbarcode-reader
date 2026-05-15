@@ -1,13 +1,12 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { IsbnSchema } from "@/lib/schema/book";
-import { supabase } from "@/lib/supabase";
+import { createSupabaseClient } from "@/lib/supabase";
 
 type LibraryStatus = "not_in_library" | "in_library" | "owned";
 
 // user_booksに存在するか確認するAPI
 export async function GET(request: NextRequest) {
-  const { userId } = await auth();
+  const { supabase, userId } = await createSupabaseClient();
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
